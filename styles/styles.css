@@ -1,0 +1,86 @@
+.play-ground {
+    margin: 100px auto;
+    height: 400px;
+    width: 600px;
+    position: relative;
+    border: 1px solid black;
+    background-color: #F0EE7E;
+}
+
+.green-racket {
+    background-color: green;
+    height: 110px;
+    width: 12px;
+    position: absolute;
+}
+
+.blue-racket {
+    background-color: blue;
+    height: 110px;
+    width: 12px;
+    position: absolute;
+}
+
+.ball {
+    width: 35px;
+    height: 35px;
+    background-color: red;
+    border-radius: 50%;
+    position: absolute;
+    display: none;
+}
+
+.button {
+    width: 82px;
+    height: 30px;
+    background-color: blueviolet;
+    position: absolute;
+    font-size: 110%;
+    border-radius: 10px;
+    color: aliceblue;
+    top: 50px;
+    left: 370px;
+}
+
+.count1,
+.count2 {
+    position: absolute;
+    font-weight: bold;
+    font-size: 250%;
+}
+
+.count1 {
+    top: 15px;
+    left: 630px;
+}
+
+.count2 {
+    top: 15px;
+    left: 670px;
+}
+
+.p {
+    position: absolute;
+    font-weight: bold;
+    font-size: 250%;
+    top: 12px;
+    left: 653px;
+}
+
+.timer {
+    position: absolute;
+    font-weight: bold;
+    font-size: 600%;
+    top: 45px;
+    left: 280px;
+}
+
+.game {
+    position: absolute;
+    font-weight: bold;
+    font-size: 500%;
+    top: 70px;
+    left: 100px;
+    display: none;
+    color: red;
+}

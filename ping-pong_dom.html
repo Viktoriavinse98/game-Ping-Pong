@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./styles/styles.css">
+</head>
+
+<body>
+    <script>
+        const playGround = document.createElement('div');
+        playGround.classList.add("play-ground");
+        document.body.append(playGround);
+        const playGroundValues = {
+            width: 600,
+            height: 400
+        }
+        const greenRacket = document.createElement('div');
+        greenRacket.classList.add("green-racket");
+        playGround.append(greenRacket);
+        const greenRacketValues = {
+            width: 12,
+            height: 110,
+            posX: 0,
+            posY: 190,
+            speedY: 12,
+            greenRacketMove: function () {
+                greenRacket.style.left = this.posX + "px";
+                greenRacket.style.top = this.posY + "px";
+            }
+        }
+        const blueRacket = document.createElement('div');
+        blueRacket.classList.add("blue-racket");
+        playGround.append(blueRacket);
+        var bluePosX = playGround.clientWidth - blueRacket.offsetWidth;
+        const blueRacketValues = {
+            width: 12,
+            height: 110,
+            speedY: 12,
+            posX: bluePosX,
+            posY: 60,
+            blueRacketMove: function () {
+                blueRacket.style.left = this.posX + "px";
+                blueRacket.style.top = this.posY + "px";
+            }
+        }
+        const ball = document.createElement('div');
+        ball.classList.add("ball");
+        playGround.append(ball);
+        const ballValues = {
+            width: 35,
+            height: 35,
+            posX: playGroundValues.width / 2 - ball.offsetWidth / 2,
+            posY: playGroundValues.height / 2 - ball.offsetHeight / 2,
+            speedX: 10,
+            speedY: 10,
+            accelX: 0,
+            accelY: 0.5,
+            ballMove: function () {
+                ball.style.left = this.posX + "px";
+                ball.style.top = this.posY + "px";
+            }
+        }
+        ballValues.speedY += Math.random()
+        if (Math.random() > 0.5) {
+            ballValues.speedY *= -1;
+        }
+        ballValues.speedX += Math.random()
+        if (Math.random() > 0.5) {
+            ballValues.speedX *= -1;
+        }
+        const button = document.createElement('button');
+        button.classList.add("button");
+        button.textContent = "Старт!"
+        document.body.append(button);
+        var count1 = document.createElement('p');
+        count1.classList.add("count1");
+        count1.textContent = '0';
+        document.body.append(count1);
+        var count2 = document.createElement('p');
+        count2.classList.add("count2");
+        count2.textContent = '0';
+        document.body.append(count2);
+        const p = document.createElement('p');
+        p.classList.add("p");
+        p.textContent = ':';
+        document.body.append(p);
+        var game = document.createElement('p');
+        game.classList.add("game");
+        game.textContent = 'Game over!';
+        playGround.append(game);
+        let newGame = true;
+        startGame = null;
+        function loose(n) {
+            if (n == 1) {
+                count1.innerHTML = parseInt(count1.innerHTML) + 1;
+                clearInterval(startGame);
+                if (parseInt(count1.innerHTML) < 5) {
+                    timerStart()
+                }
+            }
+            if (n == 2) {
+                count2.innerHTML = parseInt(count2.innerHTML) + 1;
+                clearInterval(startGame);
+                if (parseInt(count2.innerHTML) < 5) {
+                    timerStart()
+                }
+            }
+            if (parseInt(count1.innerHTML) == 5 || parseInt(count2.innerHTML) == 5) {
+                game.style.display = "block";
+                clearInterval(startGame);
+            }
+        }
+        let timerId = null;
+        function timerStart() {
+            if (newGame) {
+                game.style.display = "none";
+                count1.textContent = "0";
+                count2.textContent = "0";
+                newGame = false;
+                ballValues.posX = playGroundValues.width / 2 - ball.offsetWidth / 2;
+                ballValues.posY = playGroundValues.height / 2 - ball.offsetHeight / 2;
+                this.startGame = setInterval(tick, 40);
+            } else {
+                let counter = 3;
+                const timerP = document.createElement('p');
+                timerP.classList.add("timer");
+                timerP.textContent = counter;
+                playGround.append(timerP);
+                timerId = setInterval(timer, 1000);
+                function timer() {
+                    timerP.textContent = counter--;
+                    if (counter === -1) {
+                        clearInterval(timerId)
+                        timerP.style.display = "none";
+                        startGame = setInterval(tick, 40);
+                        ballValues.posX = playGroundValues.width / 2 - ball.offsetWidth / 2;
+                        ballValues.posY = playGroundValues.height / 2 - ball.offsetHeight / 2;
+                    }
+                }
+            }
+        }
+        let greenRacketMoveDown1 = false;
+        let greenRacketMoveUp1 = false;
+        let blueRacketMoveDown1 = false;
+        let blueRacketMoveUp1 = false;
+        document.addEventListener("keydown", function (event) {
+            switch (event.keyCode) {
+                case 87:
+                    greenRacketMove(1)
+                    greenRacketMoveUp1 = true;
+                    break;
+                case 83:
+                    greenRacketMove(-1)
+                    greenRacketMoveDown1 = true;
+                    break;
+                default:
+                    break;
+            }
+        });
+        document.addEventListener("keyup", function (event) {
+            switch (event.keyCode) {
+                case 87:
+                    greenRacketMoveUp1 = false;
+                    break;
+                case 83:
+                    greenRacketMoveDown1 = false;
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        function greenRacketMove(direction) {
+            if (direction === 1 && greenRacketMoveUp1) {
+                greenRacketMoveUp();
+            }
+            if (direction === -1 && greenRacketMoveDown1) {
+                greenRacketMoveDown();
+            }
+        }
+
+        function greenRacketMoveUp() {
+            greenRacketValues.posY -= greenRacketValues.speedY;
+            if (greenRacketValues.posY < 0) {
+                greenRacketValues.posY = 0;
+            }
+            greenRacketValues.greenRacketMove();
+            requestAnimationFrame(greenRacketMoveUp)
+        }
+        function greenRacketMoveDown() {
+            greenRacketValues.posY += greenRacketValues.speedY;
+            if (greenRacketValues.posY + greenRacketValues.height > playGroundValues.height) {
+                greenRacketValues.posY = playGroundValues.height - greenRacketValues.height;
+            }
+            greenRacketValues.greenRacketMove();
+            requestAnimationFrame(greenRacketMoveDown)
+        }
+
+        document.addEventListener("keydown", function (event) {
+            switch (event.keyCode) {
+                case 38:
+                    blueRacketMoveUp1 = true;
+                    blueRacketMove(1)
+                    break;
+                case 40:
+                    blueRacketMoveDown1 = true;
+                    blueRacketMove(-1)
+                    break;
+                default:
+                    break;
+            }
+        });
+        document.addEventListener("keyup", function (event) {
+            switch (event.keyCode) {
+                case 38:
+                    blueRacketMoveUp1 = false;
+                    break;
+                case 40:
+                    blueRacketMoveDown1 = false;
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        function blueRacketMove(direction) {
+            if (direction === 1 && blueRacketMoveUp1) {
+                blueRacketMoveUp();
+            }
+            if (direction === -1 && blueRacketMoveDown1) {
+                blueRacketMoveDown();
+            }
+        }
+        function blueRacketMoveUp() {
+            blueRacketValues.posY -= blueRacketValues.speedY;
+            if (blueRacketValues.posY < 0) {
+                blueRacketValues.posY = 0;
+            }
+            blueRacketValues.blueRacketMove();
+            requestAnimationFrame(blueRacketMoveUp)
+        }
+        function blueRacketMoveDown() {
+            blueRacketValues.posY += blueRacketValues.speedY;
+            if (blueRacketValues.posY + blueRacketValues.height > playGroundValues.height) {
+                blueRacketValues.posY = playGroundValues.height - blueRacketValues.height;
+            }
+            blueRacketValues.blueRacketMove();
+            requestAnimationFrame(blueRacketMoveDown)
+        }
+
+
+        function start() {
+            timerStart();
+            ball.style.display = "block";
+        }
+
+
+        function tick() {
+            ballValues.speedX += ballValues.accelX;
+            ballValues.posX += ballValues.speedX;
+            ballValues.speedY += ballValues.accelY;
+            ballValues.posY += ballValues.speedY;
+            if (ballValues.posX < 0) {
+                loose(1);
+            }
+            if (ballValues.posX + ballValues.width > playGroundValues.width) {
+                loose(2);
+
+            }
+            if (ballValues.posY + ballValues.height > playGroundValues.height) {
+                ballValues.speedY = -ballValues.speedY;
+                ballValues.posY = playGroundValues.height - ballValues.height;
+            }
+            if (ballValues.posY < 0) {
+                ballValues.speedY = -ballValues.speedY;
+                ballValues.posY = 0;
+            }
+            if ((ballValues.posX < ballValues.width / 2 && (ballValues.posY > greenRacketValues.posY && ballValues.posY < greenRacketValues.posY + greenRacketValues.height)) || ballValues.posX + ballValues.width / 2 > playGroundValues.width - ballValues.width && (ballValues.posY > blueRacketValues.posY && ballValues.posY < blueRacketValues.posY + blueRacketValues.height)) {
+                ballValues.speedX = -ballValues.speedX;
+                ballValues.speeY = -ballValues.speedY;
+            }
+            ballValues.ballMove();
+        }
+        greenRacketValues.greenRacketMove();
+        blueRacketValues.blueRacketMove();
+        ballValues.ballMove();
+        button.addEventListener("click", start);
+    </script>
+</body>
+
+</html>
